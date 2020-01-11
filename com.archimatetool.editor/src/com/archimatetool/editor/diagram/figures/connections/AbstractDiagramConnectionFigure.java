@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IClippingStrategy;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.Locator;
@@ -143,6 +144,22 @@ extends RoundedPolylineConnection implements IDiagramConnectionFigure {
         if(fConnectionLabel == null) {
             fConnectionLabel = new Label(""); //$NON-NLS-1$
             add(fConnectionLabel);
+            
+            getParent().setClippingStrategy(new IClippingStrategy() {
+                @Override
+                public Rectangle[] getClip(IFigure childFigure) {
+                    if(childFigure == AbstractDiagramConnectionFigure.this) {
+                        Rectangle r = getBounds().getCopy();
+                        Rectangle l = fConnectionLabel.getBounds().getCopy();
+                        //translateToRelative(r);
+                        return new Rectangle[] { r };
+                    }
+                    else {
+                        Rectangle r = childFigure.getBounds().getCopy();
+                        return new Rectangle[] { r };
+                    }
+                }
+            });
         }
         return fConnectionLabel;
     }
@@ -260,7 +277,8 @@ extends RoundedPolylineConnection implements IDiagramConnectionFigure {
             super.paintFigure(graphics);
         }
         else {
-            clipTextLabel(graphics);
+            super.paintFigure(graphics);
+            //clipTextLabel(graphics);
         }
     }
     
