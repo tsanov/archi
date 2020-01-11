@@ -152,7 +152,7 @@ extends RoundedPolylineConnection implements IDiagramConnectionFigure {
                         Rectangle r = getBounds().getCopy();
                         Rectangle l = fConnectionLabel.getBounds().getCopy();
                         //translateToRelative(r);
-                        return new Rectangle[] { r };
+                        return new Rectangle[] { l };
                     }
                     else {
                         Rectangle r = childFigure.getBounds().getCopy();
